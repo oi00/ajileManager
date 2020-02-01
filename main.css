@@ -82,3 +82,7 @@
     width: 50%;
     height: 40px
   }
+
+  #fillter{
+    flex-direction: column; 
+  }

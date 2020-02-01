@@ -3,19 +3,78 @@
 <head>
   <meta charset="utf-8">
   <title>スプリントバックログ　タスクリスト</title>
-  <link rel="stylesheet" href="./main2.css">
+  <link rel="stylesheet" href="./main3.css">
 </head>
 <body>
         <div id="app">
             <h1>スプリントバックログ　タスクリスト</h1>
-        
-            <h2>新しい作業の追加</h2>
-            <button v-on:click="openModal">タスクの追加</button>
+            <div id="action">
+                <h3>【操作】</h3>
+                <button v-on:click="openModal(null)">タスクの追加</button>
+                
+            </div>
+            <h3>【フィルター】</h3>
+            <div id="fillter">
+                <div id="fillterState">
+                    ステータス：
+                    <label v-for="label in options">
+                        <input type="radio"
+                            v-model="selectState"
+                            v-bind:value="label.value">{{ label.label }}
+                    </label>
+                </div>
+                <div id="fillterPerson">
+                    担当者：
+                    <input type="text"
+                            v-model="selectPerson">
+                </div>
+            </div>
+            
+            <h3>【一覧】</h3>
+            <ul class="contents">
+                <table>
+                    <thead v-pre>
+                        <tr>
+                        <th class="id">ID</th>
+                        <th class="task">タスク</th>
+                        <th class="state">ステータス</th>
+                        <th class="person">担当者</th>
+                        <th class="startDate">開始日</th>
+                        <th class="endDate">終了日</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                        v-for="item in computedTodos"
+                        v-bind:key="item.id"
+                        v-bind:class="{done:item.state}"
+                        v-on:click="openModal(item)">
+                            <th>{{ item.id }}</th>
+                            <td>{{ item.task }}</td>
+                            <td>{{ labels[item.state] }}</td>
+                            <td>{{ item.person }}</td>
+                            <td>{{ item.startDate }}</td>
+                            <td>{{ item.endDate }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ul>
+
             <div id="overlay" v-show="showContent">
-                <form id="inputContent" class="add-form" v-on:submit.prevent="doAdd">
-                    <p>タスク</p>
+                <form id="inputContent" class="add-form">
+                    <h3>タスク</h3>
+                    <input type="hidden" ref="id">
                     <div>
                         タスク<input type="text" ref="task">
+                    </div>
+                    <div v-show="!isNew">
+                        ステータス
+                        <select ref="state">
+                            <option value=0>未着手</option>
+                            <option value=1>実行中</option>
+                            <option value=2>レビュー中</option>
+                            <option value=3>完了</option>
+                        </select>
                     </div>
                     <div id="term">
                         期間<input type="date" ref="startDate"> ~ <input type="date" ref="endDate">
@@ -26,50 +85,15 @@
                     <div>
                         概要<input id="comment" type="text" ref="comment">
                     </div>
-                    <button type="submit">追加</button>
-                    <button v-on:click="doRemove(item)">削除</button>
+                    <button v-on:click="doAdd" v-show="isNew">追加</button>
+                    <button v-on:click="doChange()" v-show="!isNew">変更</button>
+                    <button v-on:click="doRemove()" v-show="!isNew">削除</button>
                     <button v-on:click="closeModal">閉じる</button>
                 </form>
             </div>
-            
-            <ul class="contents">
-                <table>
-                    <thead v-pre>
-                        <tr>
-                        <th class="id">ID</th>
-                        <th class="comment">タスク</th>
-                        <th class="none">未着手</th>
-                        <th class="done">実行中</th>
-                        <th class="review">レビュー中</th>
-                        <th class="fin">完了</th>
-                        <th class="event">操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                        v-for="item in this.todos"
-                        v-bind:key="item.id"
-                        v-bind:class="{done:item.state}">
-                            <th>{{ item.id }}</th>
-                            <td>{{ item.comment }}</td>
-                            <td
-                            v-for="index in 4">
-                                <input type="radio"
-                                v-bind:name="item.id" 
-                                v-bind:value="index - 1"
-                                v-bind:checked="item.state === index - 1"
-                                v-model="item.state"
-                                disabled>
-                            </td>
-                            <td>
-                                <button v-on:click="doRemove(item)">削除</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </ul>
         </div>
+
 </body>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script src="./main2.js"></script>
+<script src="./main3.js"></script>
 </html>

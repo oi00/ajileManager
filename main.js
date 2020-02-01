@@ -1,6 +1,6 @@
 // ★STEP2
 // https://jp.vuejs.org/v2/examples/todomvc.html
-var STORAGE_KEY = 'todos-vuejs-demo2'
+var STORAGE_KEY = 'todos-vuejs-demo3'
 var todoStorage = {
   fetch: function () {
     var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
@@ -24,18 +24,29 @@ new Vue({
     // ★STEP5 localStorage から 取得した ToDo のリスト
     todos: [],
     // ★STEP11 抽出しているToDoの状態
-    current: -1,
+    selectState: -1,
+    selectPerson: "",
     // ★STEP11＆STEP13 各状態のラベル
     options: [
+      { value: -1, label: 'すべて' },
       { value: 0, label: '未着手' },
       { value: 1, label: '実行中' },
       { value: 2, label: 'レビュー中' },
       { value: 3, label: '完了' }
     ],
-    showContent: false
+    showContent: false,
+    isNew: true
   },
 
   computed: {
+
+    computedTodos: function () {
+      return this.todos.filter(function (el) {
+        return this.selectState < 0 ? true : this.selectState === el.state
+      }, this).filter(function (el) {
+        return this.selectPerson == "" ? true : el.person.indexOf(this.selectPerson) != -1
+      }, this)
+    },
 
     // ★STEP13 ラベルを表示する
     labels() {
@@ -44,7 +55,8 @@ new Vue({
       }, {})
       // キーから見つけやすいように、次のように加工したデータを作成
       // {0: '作業中', 1: '完了', -1: 'すべて'}
-    }
+    },
+
   },
 
   // ★STEP8
@@ -100,14 +112,62 @@ new Vue({
       comment.value = ''
     },
 
-    // ★STEP10 削除の処理
-    doRemove: function (item) {
-      var index = this.todos.indexOf(item)
-      this.todos.splice(index, 1)
+    //変更イベント
+    doChange: function(){
+      var id = this.$refs.id
+      var task = this.$refs.task
+      var startDate = this.$refs.startDate
+      var endDate = this.$refs.endDate
+      var person = this.$refs.person
+      var comment = this.$refs.comment
+      var state = this.$refs.state
+      
+      if (!task.value.length) {
+        return
+      }
+      
+      var items = this.todos.filter(x => x.id == id.value)
+
+      if(items.length == 0){
+        //既に削除されている
+        return
+      }
+      var item = items.shift()
+
+      item.task = task.value
+      item.startDate = startDate.value
+      item.endDate = endDate.value
+      item.person = person.value
+      item.comment = comment.value
+      item.state = Number(state.value)
     },
 
-    openModal: function(){
+    // ★STEP10 削除の処理
+    doRemove: function () {
+      var id = this.$refs.id
+      var items = this.todos.filter(x => x.id == id.value)
+      if(items.length == 0){
+        //既に削除されている
+        return
+      }
+      var item = items.shift()
+      var index = this.todos.indexOf(item)
+      this.todos.splice(index, 1)
+      this.showContent = false
+    },
+
+    openModal: function(item){
         this.showContent = true
+        this.isNew = (item == null)
+        if(item != null){
+          this.$refs.id.value = item.id
+          this.$refs.task.value = item.task
+          this.$refs.startDate.value = item.startDate
+          this.$refs.endDate.value = item.endDate
+          this.$refs.person.value = item.person
+          this.$refs.comment.value = item.comment
+          this.$refs.state.value = item.state
+        }
     },
     
     closeModal: function(){
