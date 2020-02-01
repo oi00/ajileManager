@@ -1,6 +1,6 @@
 // ★STEP2
 // https://jp.vuejs.org/v2/examples/todomvc.html
-var STORAGE_KEY = 'todos-vuejs-demo3'
+var STORAGE_KEY = 'todos-vuejs-demo4'
 var todoStorage = {
   fetch: function () {
     var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
@@ -84,7 +84,6 @@ new Vue({
     doAdd: function(event, value) {
       // ref で名前を付けておいた要素を参照
       var task = this.$refs.task
-      var startDate = this.$refs.startDate
       var endDate = this.$refs.endDate
       var person = this.$refs.person
       var comment = this.$refs.comment
@@ -98,7 +97,6 @@ new Vue({
       this.todos.push({
         id: todoStorage.uid++,
         task: task.value,
-        startDate: startDate.value,
         endDate: endDate.value,
         person: person.value,
         comment: comment.value,
@@ -106,7 +104,6 @@ new Vue({
       })
       // フォーム要素を空にする
       task.value = ''
-      startDate.value = ''
       endDate.value = ''
       person.value = ''
       comment.value = ''
@@ -116,7 +113,6 @@ new Vue({
     doChange: function(){
       var id = this.$refs.id
       var task = this.$refs.task
-      var startDate = this.$refs.startDate
       var endDate = this.$refs.endDate
       var person = this.$refs.person
       var comment = this.$refs.comment
@@ -135,7 +131,6 @@ new Vue({
       var item = items.shift()
 
       item.task = task.value
-      item.startDate = startDate.value
       item.endDate = endDate.value
       item.person = person.value
       item.comment = comment.value
@@ -162,7 +157,6 @@ new Vue({
         if(item != null){
           this.$refs.id.value = item.id
           this.$refs.task.value = item.task
-          this.$refs.startDate.value = item.startDate
           this.$refs.endDate.value = item.endDate
           this.$refs.person.value = item.person
           this.$refs.comment.value = item.comment
@@ -172,6 +166,21 @@ new Vue({
     
     closeModal: function(){
         this.showContent = false
+    },
+
+    checkLimit: function(item){
+      var nowDate = new Date();
+      var endDate = Date.parse(item.endDate)
+      var term = (endDate - nowDate)/ 86400000;
+      if(item.state == 3){
+        return "fin"
+      }else if(term < -1){
+        return "out"
+      }else if(term <= 1){
+        return "pinch"
+      }else{
+        return "none"
+      }
     }
   }
 

@@ -86,3 +86,18 @@
   #fillter{
     flex-direction: column; 
   }
+
+  .fin{
+    background: #02f838;
+  }
+  .out{
+    background: #ff2104;
+  }
+  .pinch{
+    background: #ffff00;
+  }
+
+  .stateIcon{
+    font-size: 200%;
+    width: 5px;
+  }
