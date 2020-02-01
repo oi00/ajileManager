@@ -1,6 +1,6 @@
 // ★STEP2
 // https://jp.vuejs.org/v2/examples/todomvc.html
-var STORAGE_KEY = 'todos-vuejs-demo'
+var STORAGE_KEY = 'todos-vuejs-demo2'
 var todoStorage = {
   fetch: function () {
     var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
@@ -32,17 +32,10 @@ new Vue({
       { value: 2, label: 'レビュー中' },
       { value: 3, label: '完了' }
     ],
-    isActive: '0'
+    showContent: false
   },
 
   computed: {
-
-    // ★STEP12
-    computedTodos: function () {
-      return this.todos.filter(function (el) {
-        return Number(this.isActive) === el.state
-      }, this)
-    },
 
     // ★STEP13 ラベルを表示する
     labels() {
@@ -78,9 +71,13 @@ new Vue({
     // ★STEP7 ToDo 追加の処理
     doAdd: function(event, value) {
       // ref で名前を付けておいた要素を参照
+      var task = this.$refs.task
+      var startDate = this.$refs.startDate
+      var endDate = this.$refs.endDate
+      var person = this.$refs.person
       var comment = this.$refs.comment
       // 入力がなければ何もしないで return
-      if (!comment.value.length) {
+      if (!task.value.length) {
         return
       }
       // { 新しいID, コメント, 作業状態 }
@@ -88,25 +85,33 @@ new Vue({
       // 作業状態「state」はデフォルト「未着手=0」で作成
       this.todos.push({
         id: todoStorage.uid++,
+        task: task.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+        person: person.value,
         comment: comment.value,
         state: 0
       })
       // フォーム要素を空にする
+      task.value = ''
+      startDate.value = ''
+      endDate.value = ''
+      person.value = ''
       comment.value = ''
-    },
-
-    // ★STEP10 状態変更の処理
-    doChangeBefore: function (item) {
-      item.state = item.state - 1
-    },
-    doChangeAfter: function (item) {
-        item.state = item.state + 1
     },
 
     // ★STEP10 削除の処理
     doRemove: function (item) {
       var index = this.todos.indexOf(item)
       this.todos.splice(index, 1)
+    },
+
+    openModal: function(){
+        this.showContent = true
+    },
+    
+    closeModal: function(){
+        this.showContent = false
     }
   }
 
