@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>スプリントバックログ　タスクリスト</title>
+  <link rel="stylesheet" href="./main.css">
+</head>
+<body>
+  <div id="app">
+      <h1>スプリントバックログ　タスクリスト</h1>
+
+      <h2>新しい作業の追加</h2>
+      <form class="add-form" v-on:submit.prevent="doAdd">
+        <!-- コメント入力フォーム -->
+        タスク <input type="text" ref="comment">
+        <!-- 追加ボタンのモック -->
+        <button type="submit">追加</button>
+      </form>
+
+    <div class="vue_radio">
+      <div class="tabs">
+        <input type="radio" id="tab0" name="tab" value="0" v-model="isActive">
+        <label for="tab1">未着手</label>
+        <input type="radio" id="tab1" name="tab" value="1" v-model="isActive">
+        <label for="tab2">実行中</label>
+        <input type="radio" id="tab2" name="tab" value="2" v-model="isActive">
+        <label for="tab3">レビュー中</label>
+        <input type="radio" id="tab3" name="tab" value="3" v-model="isActive">
+        <label for="tab3">完了</label>
+      </div>
+      （{{ computedTodos.length }}/{{ todos.length }}件）
+
+      <ul class="contents">
+        <template v-if="isActive === '0'">
+          <table>
+              <thead v-pre>
+                <tr>
+                  <th class="id">ID</th>
+                  <th class="comment">タスク</th>
+                  <th class="button">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="item in computedTodos"
+                  v-bind:key="item.id"
+                  v-bind:class="{done:item.state}">
+                  <th>{{ item.id }}</th>
+                  <td>{{ item.comment }}</td>
+                  <td class="button">
+                    <button v-on:click="doChangeAfter(item)">
+                      {{ labels[item.state+1] }}へ
+                    </button>
+                    <button v-on:click="doRemove(item)">削除</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+        </template>
+        <template v-else-if="isActive === '1'">
+          <table>
+              <thead v-pre>
+                <tr>
+                  <th class="id">ID</th>
+                  <th class="comment">タスク</th>
+                  <th class="button">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="item in computedTodos"
+                  v-bind:key="item.id"
+                  v-bind:class="{done:item.state}">
+                  <th>{{ item.id }}</th>
+                  <td>{{ item.comment }}</td>
+                  <td class="button">
+                    <button v-on:click="doChangeBefore(item)">
+                      {{ labels[item.state-1] }}へ
+                    </button>
+                    <button v-on:click="doChangeAfter(item)">
+                      {{ labels[item.state+1] }}へ
+                    </button>
+                    <button v-on:click="doRemove(item)">削除</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+        </template>
+        <template v-else-if="isActive === '2'">
+          <table>
+            <thead v-pre>
+              <tr>
+                <th class="id">ID</th>
+                <th class="comment">タスク</th>
+                <th class="button">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="item in computedTodos"
+                v-bind:key="item.id"
+                v-bind:class="{done:item.state}">
+                <th>{{ item.id }}</th>
+                <td>{{ item.comment }}</td>
+                <td class="button">
+                  <button v-on:click="doChangeBefore(item)">
+                    {{ labels[item.state-1] }}へ
+                  </button>
+                  <button v-on:click="doChangeAfter(item)">
+                    {{ labels[item.state+1] }}へ
+                  </button>
+                  <button v-on:click="doRemove(item)">削除</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </template>
+        <template v-else-if="isActive === '3'">
+          <table>
+            <thead v-pre>
+              <tr>
+                <th class="id">ID</th>
+                <th class="comment">タスク</th>
+                <th class="button">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="item in computedTodos"
+                v-bind:key="item.id"
+                v-bind:class="{done:item.state}">
+                <th>{{ item.id }}</th>
+                <td>{{ item.comment }}</td>
+                <td class="button">
+                  <button v-on:click="doChangeBefore(item)">
+                    {{ labels[item.state-1] }}へ
+                  </button>
+                  <button v-on:click="doRemove(item)">削除</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </template>
+      </ul>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="./main.js"></script>
+</body>
+</html>
