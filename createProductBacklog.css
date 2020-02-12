@@ -12,16 +12,18 @@
   #menue {
     display: column;
     flex-basis: 10%;
-    background-color: lightskyblue;
+    background-color: cornflowerblue;
   }
 
   #leftItem {
     flex-basis: 10%;
-    background-color: lightgrey;
+    background-color: chartreuse;
   }
 
   #app {
-    flex-basis: 78%;
+    flex-basis: 80%;
+    background-color: coral;
+    max-width: 1000px;
     margin: 0 auto;
   }
   table {
@@ -96,23 +98,4 @@
   #comment{
     width: 50%;
     height: 40px
-  }
-
-  #fillter{
-    flex-direction: column; 
-  }
-
-  .fin{
-    background: #02f838;
-  }
-  .out{
-    background: #ff2104;
-  }
-  .pinch{
-    background: #ffff00;
-  }
-
-  .stateIcon{
-    font-size: 200%;
-    width: 5px;
   }

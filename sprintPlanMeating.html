@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>スプリントバックログ　タスクリスト</title>
+  <title>スプリント計画ミーティング</title>
   <link rel="stylesheet" href="./main.css">
 </head>
 <body>
@@ -10,45 +10,37 @@
         <div id="menue">
             <h3>【メニュー】</h3>
             <input type="button" onclick="location.href='./createProductBacklog.html'" value="プロダクト検討会">
-            <input type="button" onclick="location.href='./sprintPlanMeating.html'" value="スプリント計画ミーティング">
+            <input type="button" onclick="location.href='./index.html'" value="デイリースクラム">
             <input type="button" onclick="location.href='./menue.html'" value="メニューに戻る">
         </div>
         <div id="app">
-            <h1>デイリースクラム</h1>
+            <h1>スプリント計画ミーティング</h1>
+            <h3>【対象プロダクト】</h3>
             <div>
-                スプリント目標：<input type="text" readonly ref="sprintGoal">
+                実装機能：<input type="text" readonly ref="productName">
+                機能概要：<input type="text" readonly ref="productDetail">
             </div>
-            <div id="action">
-                <h3>【操作】</h3>
-                <button v-on:click="openModal(null)">タスクの追加</button>
-                
-            </div>
-            <h3>【フィルター】</h3>
-            <div id="fillter">
-                <div id="fillterState">
-                    ステータス：
-                    <label v-for="label in options">
-                        <input type="radio"
-                            v-model="selectState"
-                            v-bind:value="label.value">{{ label.label }}
-                    </label>
-                </div>
-                <div id="fillterPerson">
-                    担当者：
-                    <input type="text"
-                            v-model="selectPerson">
-                </div>
-            </div>
-            
-            <h3>【一覧】</h3>
+
+            <form id="sprintGoal">
+                <h3>【スプリント目標】</h3>
+                スプリント目標：<input type="text" ref="sprintGoal">
+                <input type="submit" value="登録">
+            </form>
+                        
+            <h3>【実行タスク】</h3>
+            <form id="sprintBucklog"  v-on:submit.prevent="doAdd">
+                タスク：<input type="text" ref="task">
+                概要：<input type="text" ref="comment"> 
+                <input type="submit" value="追加">
+                <button v-on:click="">詳細追加</button>
+            </form>
             <ul class="contents">
                 <table>
                     <thead v-pre>
                         <tr>
                             <th>ID</th>
                             <th>タスク</th>
-                            <th>担当者</th>
-                            <th>期日</th>
+                            <th>概要</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,8 +51,7 @@
                         v-on:click="openModal(item)">
                             <th>{{ item.id }}</th>
                             <td>{{ item.task }}</td>
-                            <td>{{ item.person }}</td>
-                            <td>{{ item.endDate }}</td>
+                            <td>{{ item.comment }}</td>
                         </tr>
                     </tbody>
                 </table>
